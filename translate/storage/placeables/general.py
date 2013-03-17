@@ -299,6 +299,14 @@ class OptionPlaceable(Ph):
     #regex = re.compile(r'''(-[a-zA-Z]|--[-a-z]+)\b''')
     parse = classmethod(regex_parse)
 
+class ClosurePlaceholderPlaceable(Ph):
+    """Placeable handling Google Closure style placeholders. e.g. {$myToken} """
+
+    iseditable = False
+    istranslatable = False
+    regex = re.compile(r'\{\$\w+\}')
+    parse = classmethod(regex_parse)
+
 
 def to_general_placeables(tree, classmap={
         G: (AltAttrPlaceable,),
@@ -310,6 +318,7 @@ def to_general_placeables(tree, classmap={
              EmailPlaceable,
              OptionPlaceable,
              PunctuationPlaceable,
+             ClosurePlaceholderPlaceable,
             ),
         }):
     if not isinstance(tree, StringElem):
@@ -355,5 +364,8 @@ parsers = [
     CamelCasePlaceable.parse,
     OptionPlaceable.parse,
     PunctuationPlaceable.parse,
+    # The Closure placeholders can contain numbers, so it must come
+    # before the NumberPlaceable parser
+    ClosurePlaceholderPlaceable.parse,
     NumberPlaceable.parse,
 ]
