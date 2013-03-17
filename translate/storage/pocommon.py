@@ -166,7 +166,7 @@ class pounit(base.TranslationUnit):
     def set_state_n(self, value):
         super(pounit, self).set_state_n(value)
         has_target = False
-        if self.hasplural():
+        if self.hasplural() and bool(self.target):
             for string in self.target.strings:
                 if string:
                     has_target = True
